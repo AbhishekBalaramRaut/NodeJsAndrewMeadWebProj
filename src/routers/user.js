@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const User = require('../models/user');
 const auth = require('../middleware/auth.js');
+const {welcomeTaskMail,exitTaskMail} = require('./../email/email');
 
 const userRouter  = new express.Router();
 userRouter.get('/test', (req,res) => {
@@ -47,6 +48,7 @@ userRouter.post('/users', async (req,res) => {
         await user.save();
       
         const token = await user.generateAuthToken();
+        welcomeTaskMail(user.name, user.email);
         res.status(201).send({user,token});
     } 
     catch(e) {
@@ -214,6 +216,7 @@ userRouter.delete('/admin/users/:id', auth, async (req,res) => {
 userRouter.delete('/users/me', auth, async (req,res) => {
     try {
         req.user.remove();
+        exitTaskMail(req.user.name, req.user.email);
         res.send(req.user);
     } catch (error) {
         res.status(500).send(e);
