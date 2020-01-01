@@ -12,39 +12,32 @@ var transporter = nodemailer.createTransport({
   }
   });
   
- 
+
   var mailOptions = {
     from: process.env.EMAIL
   };
   
 const  welcomeTaskMail = async (name,mail) => {
     console.log('entry mail');
+    
+    if(process.env.ENVIRONMENT != 'TEST') {
     mailOptions['to'] = mail;
     mailOptions['subject'] = 'Warm welcome from Abhishek ';
     mailOptions['text'] = `Welcome ${name} , you have come at the correct place. This app is all you need`;
       
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      }); 
+    await transporter.sendMail(mailOptions); 
+    }
 };
 
 const  exitTaskMail = async (name,mail) => {
     console.log('exit mail');
+    if(process.env.ENVIRONMENT != 'TEST') {
     mailOptions['to'] = mail;
     mailOptions['subject'] = 'Goodbye from Abhishek ';
     mailOptions['text'] = `Ohh, its sad ,You are leaving.  ${name} , you will regret this day.`;
       
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      }); 
+    await transporter.sendMail(mailOptions); 
+    }
 };
 
 module.exports = {welcomeTaskMail,exitTaskMail};

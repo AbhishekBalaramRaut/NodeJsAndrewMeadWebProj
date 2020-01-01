@@ -159,7 +159,7 @@ userRouter.patch('/admin/users/:id', auth, async (req,res) => {
         
         const user = await  User.findById(_id);
         updates.forEach((update) => user[update] = req.body[update]);
-        user.save();
+        await user.save();
 
         if(!user) {
                 return res.status(404).send('No user found');
@@ -184,7 +184,7 @@ userRouter.patch('/users/me', auth, async (req,res) => {
         }
 
         updates.forEach((update) => req.user[update] = req.body[update]);
-        req.user.save();
+        await req.user.save();
         res.send(req.user);
     } catch (e) {
         res.status(500).send(e);
@@ -204,7 +204,7 @@ userRouter.delete('/admin/users/:id', auth, async (req,res) => {
         if(!user) {
                 return res.status(404).send('No user found');
         }
-        user.remove();
+        await user.remove();
         res.send(user);
     } catch (error) {
         res.status(500).send(e);
@@ -215,7 +215,7 @@ userRouter.delete('/admin/users/:id', auth, async (req,res) => {
 
 userRouter.delete('/users/me', auth, async (req,res) => {
     try {
-        req.user.remove();
+        await req.user.remove();
         exitTaskMail(req.user.name, req.user.email);
         res.send(req.user);
     } catch (error) {

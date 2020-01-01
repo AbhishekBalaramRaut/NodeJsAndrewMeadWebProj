@@ -101,9 +101,9 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 userSchema.pre('save', async function (next) {
     const user = this;
-    console.log('middleware save user called');
+
     if(user.isModified('password')) {
-        console.log('password modified');
+        
         user.password = await bcrypt.hash(user.password,8);
     }
     next();
@@ -111,7 +111,7 @@ userSchema.pre('save', async function (next) {
 
 userSchema.pre('remove', async function (next) {
     const user = this;
-    console.log('middleware remove user called');
+   
     await Task.deleteMany({owner: user._id});
     next();
 });
